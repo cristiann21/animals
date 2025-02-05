@@ -47,7 +47,7 @@
 
             <div class="mb-3">
                 <label for="ownerphone" class="form-label">Owner's Phone</label>
-                <input type="tel" class="form-control" id="ownerphone" name="ownerphone" pattern="[0-9]{10}" required>
+                <input type="tel" class="form-control" id="ownerphone" name="ownerphone" required>
             </div>
 
             <button type="submit" class="btn btn-primary w-100">Create</button>

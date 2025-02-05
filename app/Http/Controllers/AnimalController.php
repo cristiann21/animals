@@ -7,64 +7,50 @@ use Illuminate\Http\Request;
 
 class AnimalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $animals = Animal::all();
         return view('animal.index', compact('animals'));    
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('animal.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-
-        $animal = Animal::create($request->all());
-        return redirect()->route('animal.index')->with('success', 'Animal creado con exito');
-
-        //Despues tengo que crear el propietario
-        // opcion 1 crear un objeto owner, meterle es sus atributos los datos del formulario , guardar en la base de datos
-        $owener = new Owner();
-        $owener->name = $request->input('ownername');        
-        $owener->phone = $request->input('ownerphone');
-        $owner->animal()->save($animal);
+        // Crear el Animal
+        $animal = new Animal();
+        $animal->name = $request->input('name');
+        $animal->weight = $request->input('weight');
+        $animal->age = $request->input('age');
+        $animal->description = $request->input('description');
+        $animal->save();
+    
+        // Crear el Owner
+        $owner = new Owner();
+        $owner->name = $request->input('ownername');
+        $owner->phone = $request->input('ownerphone');
         $owner->save();
-
-        return redirect()->route('animal.index')->with('success', 'Animal creado con exito');
-
-
+    
+        // Asociar el Animal al Owner
+        $owner->animals()->save($animal);
+    
+        // Redirigir con un mensaje de éxito
+        return redirect()->route('animal.index')->with('success', 'Animal creado con éxito');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Animal $animal)
     {
         return view('animal.show', compact('animal'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Animal $animal)
     {
         return view('animal.edit', compact('animal'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Animal $animal)
     {
         //$request contiene los datos del formulario
@@ -72,10 +58,7 @@ class AnimalController extends Controller
         //reenviamos al index
         return redirect()->route('animal.index')->with('success', 'Animal actualizado con exito');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
+ 
     public function destroy(Animal $animal)
     {
         //Primero eliminar al propietario
